@@ -1,5 +1,6 @@
 package com.example.workmanagerexample
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +35,16 @@ class BlurActivity : AppCompatActivity() {
 
         blurViewModel.outputWorkInfos.observe(this, workInfosObserver())
 
+        binding.seeFileButton.setOnClickListener {
+            blurViewModel.outputUri?.let { currentUri ->
+                val actionView = Intent(Intent.ACTION_VIEW, currentUri)
+                actionView.resolveActivity(packageManager)?.run {
+                    startActivity(actionView)
+                }
+            }
+        }
+
+        binding.cancelButton.setOnClickListener { blurViewModel.cancelWork() }
     }
 
     private fun workInfosObserver(): Observer<List<WorkInfo>> {

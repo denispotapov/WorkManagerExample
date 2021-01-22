@@ -49,12 +49,8 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
 
     }
 
-    private fun createInputDataForUri(): Data {
-        val builder = Data.Builder()
-        imageUri?.let {
-            builder.putString("KEY_IMAGE_URI", imageUri.toString())
-        }
-        return builder.build()
+    internal fun cancelWork() {
+        workManager.cancelUniqueWork(IMAGE_MANIPULATION_WORK_NAME)
     }
 
     internal fun setImageUri(uri: String?) {
@@ -71,5 +67,13 @@ class BlurViewModel(application: Application) : AndroidViewModel(application) {
         } else {
             null
         }
+    }
+
+    private fun createInputDataForUri(): Data {
+        val builder = Data.Builder()
+        imageUri?.let {
+            builder.putString("KEY_IMAGE_URI", imageUri.toString())
+        }
+        return builder.build()
     }
 }
