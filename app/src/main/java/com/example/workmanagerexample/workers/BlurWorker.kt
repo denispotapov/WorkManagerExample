@@ -1,4 +1,4 @@
-package com.example.workmanagerexample
+package com.example.workmanagerexample.workers
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -7,6 +7,10 @@ import android.text.TextUtils
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.example.workmanagerexample.blurBitmap
+import com.example.workmanagerexample.makeStatusNotification
+import com.example.workmanagerexample.sleep
+import com.example.workmanagerexample.writeBitmapToFile
 import timber.log.Timber
 
 class BlurWorker(context: Context, params: WorkerParameters) : Worker(context, params) {
@@ -14,10 +18,14 @@ class BlurWorker(context: Context, params: WorkerParameters) : Worker(context, p
     override fun doWork(): Result {
 
         val appContext = applicationContext
-        makeStatusNotification("Blurring image", appContext)
         val resourceUri = inputData.getString("KEY_IMAGE_URI")
 
-        try {
+        makeStatusNotification("Blurring image", appContext)
+
+        sleep()
+
+
+        return try {
             if (TextUtils.isEmpty(resourceUri)) {
                 Timber.e("Invalid input uri")
                 throw IllegalArgumentException("Invalid input uri")
@@ -33,13 +41,11 @@ class BlurWorker(context: Context, params: WorkerParameters) : Worker(context, p
 
             val outputData = workDataOf("KEY_IMAGE_URI" to outputUri.toString())
 
-            makeStatusNotification("Output is $outputUri", appContext)
-
-            return Result.success(outputData)
+            Result.success(outputData)
 
         } catch (throwable: Throwable) {
             Timber.e(throwable, "Error applying blur")
-            return Result.failure()
+            Result.failure()
         }
     }
 }

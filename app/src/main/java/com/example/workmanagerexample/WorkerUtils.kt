@@ -12,6 +12,7 @@ import android.renderscript.RenderScript
 import android.renderscript.ScriptIntrinsicBlur
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -94,4 +95,13 @@ fun makeStatusNotification(message: String, context: Context) {
 
     // Show the notification
     NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
+}
+
+fun sleep() {
+    try {
+        Thread.sleep(DELAY_TIME_MILLIS, 0)
+    } catch (e: InterruptedException) {
+        Timber.e(e.message)
+    }
+
 }

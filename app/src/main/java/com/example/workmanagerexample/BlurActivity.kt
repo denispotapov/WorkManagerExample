@@ -3,6 +3,7 @@ package com.example.workmanagerexample
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.workmanagerexample.databinding.ActivityBlurBinding
 import timber.log.Timber
 
@@ -19,6 +20,12 @@ class BlurActivity : AppCompatActivity() {
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree())
 
         blurViewModel = ViewModelProvider(this).get(BlurViewModel::class.java)
+
+        val imageUriExtra = intent.getStringExtra("KEY_IMAGE_URI")
+        blurViewModel.setImageUri(imageUriExtra)
+        blurViewModel.imageUri?.let { imageUri ->
+            Glide.with(this).load(imageUri).into(binding.imageView)
+        }
 
         binding.goButton.setOnClickListener { blurViewModel.applyBlur(blurLevel) }
     }
